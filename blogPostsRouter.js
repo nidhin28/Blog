@@ -1,0 +1,78 @@
+const express = require('express');
+const router = express.Router();
+
+const bodyParser = require('body-parser');
+const jsonParser = bodyParser.json();
+
+const {BlogPosts} = require('./models');
+
+// convenience function for generating lorem text for blog
+// posts we initially add below
+function lorem() {
+  return 'Sample blog posts'
+}
+
+// seed some posts so initial GET requests will return something
+BlogPosts.create(
+  'First post test', lorem(), 'Rk');
+BlogPosts.create(
+  'The world changes', lorem(), 'Lefty');
+
+router.get('/', (req, res) => {
+  res.json(BlogPosts.get());
+});
+
+
+
+router.post('/', jsonParser, (req, res) => {
+  
+  const requiredFields = ['title', 'content','author'];
+  for (let i=0; i<requiredFields.length; i++) {
+    const field = requiredFields[i];
+    if (!(field in req.body)) {
+      const message = `Missing \`${field}\` in request body`
+      console.error(message);
+      return res.status(400).send(message);
+    }
+  }
+
+  const item = BlogPosts.create(req.body.title, req.body.content,req.body.author);
+  res.status(201).json(item);
+});
+
+
+router.put('/:id', jsonParser, (req, res) => {
+  const requiredFields = ['title', 'content','author', 'id'];
+  for (let i=0; i<requiredFields.length; i++) {
+    const field = requiredFields[i];
+    if (!(field in req.body)) {
+      const message = `Missing \`${field}\` in request body`
+      console.error(message);
+      return res.status(400).send(message);
+    }
+  }
+
+  if (req.params.id !== req.body.id) {
+    const message = `Request path id (${req.params.id}) and request body id (${req.body.id}) must match`;
+    console.error(message);
+    return res.status(400).send(message);
+  }
+  console.log(`Updating blog list item \`${req.params.id}\``);
+  BlogPosts.update({
+    id: req.params.id,
+    author: req.body.author,
+    content: req.body.content,
+    title : req.body.title
+  });
+  res.status(204).end();
+});
+
+router.delete('/:id' , (req, res) => {
+ BlogPosts.delete(req.params.id);
+  console.log(`Deleted BlogPosts list item \`${req.params.ID}\``);
+  res.status(204).end();
+});
+
+module.exports = router;
+
+
