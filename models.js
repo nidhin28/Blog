@@ -1,19 +1,19 @@
 const uuid = require('uuid');
 
-<<<<<<< HEAD
+
 // this module provides volatile storage, using a `BlogPost`
-=======
+
 // This module provides volatile storage, using a `BlogPost`
->>>>>>> 08649127535859eb6ee5e26f86089580d9a69a76
+
 // model. We haven't learned about databases yet, so for now
 // we're using in-memory storage. This means each time the app stops, our storage
 // gets erased.
 
-<<<<<<< HEAD
+
 // don't worry to much about how BlogPost is implemented.
-=======
+
 // Don't worry too much about how BlogPost is implemented.
->>>>>>> 08649127535859eb6ee5e26f86089580d9a69a76
+
 // Our concern in this example is with how the API layer
 // is implemented, and getting it to use an existing model.
 
@@ -59,11 +59,9 @@ const BlogPosts = {
     const postIndex = this.posts.findIndex(
       post => post.id === updatedPost.id);
     if (postIndex === -1) {
-<<<<<<< HEAD
+
       throw StorageException(
-=======
-      throw new StorageException(
->>>>>>> 08649127535859eb6ee5e26f86089580d9a69a76
+
         `Can't update item \`${id}\` because doesn't exist.`)
     }
     this.posts[postIndex] = Object.assign(
